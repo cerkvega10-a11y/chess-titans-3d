@@ -82,13 +82,14 @@
       z-index: 50;
       display: flex;
       justify-content: center;
-      align-items: center;
+      align-items: flex-start;
       background: radial-gradient(circle at center, rgba(10, 15, 30, 0.78) 0%, rgba(2, 4, 10, 0.96) 100%);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       transition: opacity 0.6s ease, transform 0.6s ease;
       overflow-y: auto;
-      padding: 16px;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px 14px calc(40px + env(safe-area-inset-bottom, 24px));
     }
 
     #lobby-screen.hidden {
@@ -100,6 +101,7 @@
     .lobby-container {
       width: 100%;
       max-width: 1040px;
+      margin: auto 0;
       background: var(--bg-glass);
       border: 1px solid var(--border-glass);
       border-radius: 24px;
@@ -795,8 +797,10 @@
       z-index: 55;
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 20px;
+      align-items: flex-start;
+      overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
+      padding: 24px 14px calc(40px + env(safe-area-inset-bottom, 24px));
       transition: opacity 0.4s ease, transform 0.4s ease;
     }
 
@@ -809,6 +813,7 @@
     .cover-card {
       width: 100%;
       max-width: 620px;
+      margin: auto 0;
       background: rgba(15, 23, 42, 0.88);
       border: 1px solid rgba(0, 243, 255, 0.4);
       border-radius: 28px;
@@ -1334,7 +1339,8 @@
     }
 
     @media (max-width: 768px) {
-      .lobby-container { padding: 18px 14px; }
+      .lobby-container { padding: 18px 14px; margin: 0 auto; }
+      .cover-card { padding: 26px 16px; margin: 0 auto; }
       .lobby-title { font-size: 1.5rem; }
       .chess-logo-3d { width: 75px; height: 75px; }
       .style-cards { grid-template-columns: repeat(2, 1fr); }
@@ -1345,9 +1351,9 @@
       .action-toolbar { display: none !important; }
       .gemini-dialog-box { max-width: 100%; order: 3; }
       .status-center { display: none; }
-      .bottom-bar { flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; }
+      .bottom-bar { flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; padding-bottom: max(16px, env(safe-area-inset-bottom, 16px)); }
       .camera-toolbar { display: none !important; }
-      .mobile-cam-dock-container { display: flex; }
+      .mobile-cam-dock-container { display: flex; margin-bottom: 20px; }
     }
   </style>
 </head>
@@ -5028,6 +5034,9 @@ Responde EXCLUSIVAMENTE en JSON:
     /* ==========================================================
        🌐 MULTIJUGADOR EN LÍNEA, DUELO 1v1 DIRECTO Y MATCHMAKING
        ========================================================== */
+    const ONLINE_BACKEND_URL = (window.location.protocol === 'file:' || window.location.origin === 'null')
+      ? 'https://chess-titans-3d.onrender.com'
+      : '';
     let matchmakingTimerId = null;
     let matchmakingSeconds = 0;
     let matchmakingPollTimer = null;
@@ -5131,7 +5140,7 @@ Responde EXCLUSIVAMENTE en JSON:
       }, 1000);
 
       // Petición al servidor HTTP
-      fetch('/api/online/direct-challenge', {
+      fetch(ONLINE_BACKEND_URL + '/api/online/direct-challenge', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -5171,7 +5180,7 @@ Responde EXCLUSIVAMENTE en JSON:
           return;
         }
 
-        fetch(`/api/online/check-direct-challenge?playerId=${GAME_STATE.onlinePlayerId}&pairKey=${encodeURIComponent(pairKey)}`)
+        fetch(`${ONLINE_BACKEND_URL}/api/online/check-direct-challenge?playerId=${GAME_STATE.onlinePlayerId}&pairKey=${encodeURIComponent(pairKey)}`)
           .then(res => res.json())
           .then(data => {
             if (data.status === 'matched') {
@@ -5211,7 +5220,7 @@ Responde EXCLUSIVAMENTE en JSON:
       }, 1000);
 
       // Petición al servidor HTTP
-      fetch('/api/online/matchmake', {
+      fetch(ONLINE_BACKEND_URL + '/api/online/matchmake', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playerId: GAME_STATE.onlinePlayerId, playerName: GAME_STATE.playerName })
@@ -5238,7 +5247,7 @@ Responde EXCLUSIVAMENTE en JSON:
           clearInterval(matchmakingPollTimer);
           return;
         }
-        fetch(`/api/online/check-match?playerId=${GAME_STATE.onlinePlayerId}`)
+        fetch(`${ONLINE_BACKEND_URL}/api/online/check-match?playerId=${GAME_STATE.onlinePlayerId}`)
           .then(res => res.json())
           .then(data => {
             if (data.status === 'matched') {
@@ -5255,7 +5264,7 @@ Responde EXCLUSIVAMENTE en JSON:
       if (matchmakingPollTimer) clearInterval(matchmakingPollTimer);
       if (directDuelPollTimer) clearInterval(directDuelPollTimer);
       document.getElementById("modal-matchmaking").classList.remove("open");
-      fetch('/api/online/cancel', {
+      fetch(ONLINE_BACKEND_URL + '/api/online/cancel', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ playerId: GAME_STATE.onlinePlayerId })
@@ -5347,7 +5356,7 @@ Responde EXCLUSIVAMENTE en JSON:
           return;
         }
 
-        fetch(`/api/online/poll?roomId=${GAME_STATE.onlineRoomId}&lastIndex=${GAME_STATE.onlineLastMoveCount}`)
+        fetch(`${ONLINE_BACKEND_URL}/api/online/poll?roomId=${GAME_STATE.onlineRoomId}&lastIndex=${GAME_STATE.onlineLastMoveCount}`)
           .then(res => res.json())
           .then(data => {
             if (data.moves && data.moves.length > 0) {
@@ -5374,7 +5383,7 @@ Responde EXCLUSIVAMENTE en JSON:
     function broadcastOnlineMove(uciMove) {
       if (!GAME_STATE.onlineMode || GAME_STATE.onlineIsAiBot) return;
 
-      fetch('/api/online/move', {
+      fetch(ONLINE_BACKEND_URL + '/api/online/move', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

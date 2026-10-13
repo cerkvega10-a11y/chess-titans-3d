@@ -1017,20 +1017,152 @@
       transform: none;
     }
 
+    /* ==========================================================
+       BARRA LATERAL PARA CELULAR (MOBILE DRAWER)
+       ========================================================== */
+    .mobile-menu-btn {
+      display: none;
+      background: var(--bg-glass);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--border-highlight);
+      color: var(--accent-cyan);
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      font-size: 1.4rem;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 15px rgba(0, 243, 255, 0.4);
+      transition: all 0.25s ease;
+      flex-shrink: 0;
+    }
+    .mobile-menu-btn:hover {
+      background: rgba(0, 243, 255, 0.2);
+      transform: scale(1.05);
+    }
+
+    .mobile-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+      opacity: 0;
+    }
+    .mobile-sidebar.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .sidebar-backdrop {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+    }
+    .sidebar-content {
+      position: absolute;
+      top: 0;
+      right: -320px;
+      width: 300px;
+      max-width: 85%;
+      height: 100%;
+      background: rgba(10, 15, 30, 0.96);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-left: 1px solid var(--border-highlight);
+      box-shadow: -10px 0 35px rgba(0, 0, 0, 0.85);
+      padding: 20px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: right 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
+    }
+    .mobile-sidebar.open .sidebar-content {
+      right: 0;
+    }
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--border-glass);
+    }
+    .sidebar-close-btn {
+      background: none;
+      border: none;
+      color: var(--text-muted);
+      font-size: 1.8rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+    .sidebar-player-badge {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 8px 14px;
+    }
+    .sidebar-menu-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .sidebar-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      background: rgba(15, 23, 42, 0.65);
+      border: 1px solid var(--border-glass);
+      border-radius: 12px;
+      padding: 11px 14px;
+      color: #f8fafc;
+      font-size: 0.88rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .sidebar-item:hover, .sidebar-item:active {
+      background: rgba(0, 243, 255, 0.15);
+      border-color: var(--accent-cyan);
+      transform: translateX(-3px);
+    }
+    .sidebar-item.surrender {
+      border-color: rgba(239, 68, 68, 0.4);
+      color: #f87171;
+    }
+    .sidebar-item.surrender:hover, .sidebar-item.surrender:active {
+      background: rgba(239, 68, 68, 0.2);
+      border-color: #ef4444;
+    }
+
     @media (max-width: 768px) {
       .lobby-container { padding: 18px 14px; }
       .lobby-title { font-size: 1.5rem; }
       .chess-logo-3d { width: 75px; height: 75px; }
       .style-cards { grid-template-columns: repeat(2, 1fr); }
-      .top-bar { flex-direction: column; align-items: stretch; gap: 8px; }
-      .players-box { width: 100%; justify-content: space-between; }
-      .player-card { min-width: 47%; padding: 6px 10px; }
-      .gemini-dialog-box { max-width: 100%; }
+      .top-bar { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px; }
+      .players-box { width: calc(100% - 52px); justify-content: space-between; }
+      .player-card { min-width: 48%; padding: 6px 8px; }
+      .mobile-menu-btn { display: flex; }
+      .action-toolbar { display: none !important; }
+      .gemini-dialog-box { max-width: 100%; order: 3; }
       .status-center { display: none; }
-      .bottom-bar { flex-direction: column-reverse; align-items: stretch; gap: 8px; }
-      .camera-toolbar { overflow-x: auto; justify-content: flex-start; padding: 5px; }
-      .action-toolbar { justify-content: space-between; }
-      .action-btn { padding: 8px 10px; font-size: 0.76rem; }
+      .bottom-bar { flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+      .camera-toolbar { overflow-x: auto; justify-content: center; padding: 4px; width: 100%; }
+      .cam-btn { padding: 6px 8px; font-size: 0.72rem; }
     }
   </style>
 </head>
@@ -1484,6 +1616,11 @@
         </div>
       </div>
 
+      <!-- Botón de Menú Lateral en Celular -->
+      <button class="mobile-menu-btn hud-element" onclick="openMobileSidebar()" title="Abrir Menú de Opciones">
+        ☰
+      </button>
+
       
       <!-- RELOJES DE AJEDREZ DUAL (MODO BLITZ 5 MIN) -->
       <div id="chess-clocks-wrapper" class="chess-clocks-wrapper hud-element" style="display:none;">
@@ -1560,6 +1697,78 @@
         <button class="action-btn" onclick="returnToLobby()" title="Menú Principal">
           🚪 Menú
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==========================================================
+       BARRA LATERAL PARA CELULAR (MOBILE DRAWER)
+       ========================================================== -->
+  <div id="mobile-hud-sidebar" class="mobile-sidebar">
+    <div class="sidebar-backdrop" onclick="closeMobileSidebar()"></div>
+    <div class="sidebar-content">
+      <div class="sidebar-header">
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="font-size:1.4rem;">♔</span>
+          <span style="font-family:'Orbitron',sans-serif; font-size:0.95rem; font-weight:800; color:var(--accent-cyan); letter-spacing:0.5px;">CHESS TITANS</span>
+        </div>
+        <button class="sidebar-close-btn" onclick="closeMobileSidebar()">&times;</button>
+      </div>
+
+      <!-- Ficha rápida de jugador -->
+      <div class="sidebar-player-badge">
+        <span id="sidebar-avatar" style="font-size:1.5rem;">👑</span>
+        <div>
+          <div style="font-size:0.65rem; color:#94a3b8; text-transform:uppercase;">Jugador</div>
+          <div id="sidebar-username" style="font-family:'Orbitron',sans-serif; font-size:0.95rem; font-weight:700; color:#00f3ff;">Ajedrecista</div>
+        </div>
+      </div>
+
+      <!-- Menú de opciones táctiles -->
+      <div class="sidebar-menu-list">
+        <button class="sidebar-item" onclick="closeMobileSidebar(); openSettingsModal();">
+          <span class="icon">⚙️</span>
+          <span class="label">Ajustes & Audio</span>
+        </button>
+        <button class="sidebar-item" onclick="closeMobileSidebar(); openCustomModal();">
+          <span class="icon">🎨</span>
+          <span class="label">Estilos (Piezas/Tablero)</span>
+        </button>
+        <button class="sidebar-item" id="sidebar-map-btn" onclick="closeMobileSidebar(); openCampaignMapModal();" style="display:none;">
+          <span class="icon">🗺️</span>
+          <span class="label">Mapa de Campaña (1-100)</span>
+        </button>
+        <button class="sidebar-item" onclick="closeMobileSidebar(); restartMatch();">
+          <span class="icon">🔄</span>
+          <span class="label">Reiniciar Partida</span>
+        </button>
+        <button class="sidebar-item surrender" onclick="surrenderMatch();">
+          <span class="icon">🏳️</span>
+          <span class="label">Rendirse / Abandonar</span>
+        </button>
+        <button class="sidebar-item" onclick="closeMobileSidebar(); returnToLobby();">
+          <span class="icon">🚪</span>
+          <span class="label">Menú Principal (Lobby)</span>
+        </button>
+        <button class="sidebar-item" onclick="closeMobileSidebar(); returnToCoverScreen();">
+          <span class="icon">🏠</span>
+          <span class="label">Portada Principal</span>
+        </button>
+        <button class="sidebar-item" onclick="closeMobileSidebar(); runAutomatedDiagnosis();">
+          <span class="icon">🩺</span>
+          <span class="label">Auditoría Técnica</span>
+        </button>
+      </div>
+
+      <!-- Controles de cámara táctiles -->
+      <div style="margin-top:auto; padding-top:10px; border-top:1px solid var(--border-glass);">
+        <div style="font-size:0.72rem; color:#94a3b8; margin-bottom:8px; font-weight:700; text-transform:uppercase;">Ángulos de Cámara</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
+          <button class="cam-btn active" onclick="closeMobileSidebar(); setCameraView('classic', this);">📐 45° Completa</button>
+          <button class="cam-btn" onclick="closeMobileSidebar(); setCameraView('top', this);">🎥 Cenital</button>
+          <button class="cam-btn" onclick="closeMobileSidebar(); setCameraView('cinematic', this);">👁️ Ras de Mesa</button>
+          <button class="cam-btn" onclick="closeMobileSidebar(); rotateCamera180();">🔄 Girar 180°</button>
+        </div>
       </div>
     </div>
   </div>
@@ -2407,6 +2616,25 @@ Responde EXCLUSIVAMENTE en JSON:
        🤖 AGENTE 1: MOTOR GRÁFICO 3D (THREE.JS + GSAP)
        BANDEJAS 3D DE PIEZAS CAPTURADAS, CORONACIÓN 3D & CORRECCIÓN DE COLISIÓN
        ========================================================================== */
+    function getOptimalCameraDistance() {
+      const aspect = window.innerWidth / window.innerHeight;
+      if (aspect < 0.52) {
+        return 18.5; // Celulares alargados en vertical (20:9, 19.5:9)
+      } else if (aspect < 0.65) {
+        return 16.5; // Celulares estándar (16:9, 18:9)
+      } else if (aspect < 0.85) {
+        return 14.0; // Tablets en vertical
+      } else if (aspect < 1.0) {
+        return 11.5; // Pantallas casi cuadradas
+      } else {
+        return 8.5;  // PC / Pantallas horizontales panorámicas
+      }
+    }
+
+    /* ==========================================================================
+       🤖 AGENTE 1: MOTOR GRÁFICO 3D (THREE.JS + GSAP)
+       BANDEJAS 3D DE PIEZAS CAPTURADAS, CORONACIÓN 3D & CORRECCIÓN DE COLISIÓN
+       ========================================================================== */
     const Graphics3D = {
       scene: null,
       camera: null,
@@ -2443,8 +2671,9 @@ Responde EXCLUSIVAMENTE en JSON:
         const canvas = document.getElementById("webgl-canvas");
         this.scene = new THREE.Scene();
 
+        const camDist = getOptimalCameraDistance();
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
-        this.camera.position.set(0, 9.0, 9.5);
+        this.camera.position.set(0, camDist, camDist);
 
         this.renderer = new THREE.WebGLRenderer({
           canvas: canvas,
@@ -2508,6 +2737,17 @@ Responde EXCLUSIVAMENTE en JSON:
         this.camera.aspect = window.innerWidth / window.innerHeight;
         this.camera.updateProjectionMatrix();
         this.renderer.setSize(window.innerWidth, window.innerHeight);
+
+        const sign = this.isBoardFlipped ? -1 : 1;
+        const camDist = getOptimalCameraDistance();
+        if (Math.abs(this.camera.position.x) < 0.8) {
+          gsap.to(this.camera.position, {
+            y: camDist,
+            z: camDist * sign,
+            duration: 0.4,
+            ease: "power2.out"
+          });
+        }
       },
 
       generate360PanoramaTexture(style) {
@@ -3649,15 +3889,17 @@ Responde EXCLUSIVAMENTE en JSON:
         document.getElementById("btn-auto-rotate").innerText = "💫 Auto 360°";
 
         const sign = this.isBoardFlipped ? -1 : 1;
+        const camDist = getOptimalCameraDistance();
         switch (type) {
           case 'top':
-            gsap.to(this.camera.position, { x: 0, y: 12.5, z: 0.01 * sign, duration: 1.0, ease: "power2.inOut" });
+            gsap.to(this.camera.position, { x: 0, y: camDist * 1.35, z: 0.01 * sign, duration: 1.0, ease: "power2.inOut" });
             break;
-          case 'classic':
-            gsap.to(this.camera.position, { x: 0, y: 8.5, z: 8.5 * sign, duration: 1.0, ease: "power2.inOut" });
+          case 'classic': // Vista a 45° completa sin recorte
+            gsap.to(this.camera.position, { x: 0, y: camDist, z: camDist * sign, duration: 1.0, ease: "power2.inOut" });
             break;
           case 'cinematic':
-            gsap.to(this.camera.position, { x: 0, y: 2.2, z: 5.6 * sign, duration: 1.0, ease: "power2.inOut" });
+            const isMobile = window.innerWidth <= 768 || window.innerWidth < window.innerHeight;
+            gsap.to(this.camera.position, { x: 0, y: isMobile ? 3.8 : 2.2, z: (isMobile ? 8.5 : 5.6) * sign, duration: 1.0, ease: "power2.inOut" });
             break;
         }
         gsap.to(this.controls.target, { x: 0, y: 0, z: 0, duration: 1.0 });
@@ -4540,6 +4782,14 @@ Responde EXCLUSIVAMENTE en JSON:
 
         // Movimientos sincronizados
         if (msg.type === 'move' && msg.roomId === GAME_STATE.onlineRoomId && msg.from !== GAME_STATE.onlinePlayerId) {
+          if (msg.uci === 'resign') {
+            GAME_STATE.isGameOver = true;
+            stopChessClocks();
+            AudioEngine.playWin();
+            confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+            showGameOver("🏆 ¡VICTORIA POR ABANDONO!", `${GAME_STATE.rivalName} se ha rendido. ¡Has ganado el duelo!`);
+            return;
+          }
           executeMoveInGame(msg.uci);
         }
 
@@ -4844,6 +5094,14 @@ Responde EXCLUSIVAMENTE en JSON:
             if (data.moves && data.moves.length > 0) {
               data.moves.forEach(m => {
                 if (m.from !== GAME_STATE.onlinePlayerId) {
+                  if (m.uci === 'resign') {
+                    GAME_STATE.isGameOver = true;
+                    stopChessClocks();
+                    AudioEngine.playWin();
+                    confetti({ particleCount: 150, spread: 90, origin: { y: 0.6 } });
+                    showGameOver("🏆 ¡VICTORIA POR ABANDONO!", `${GAME_STATE.rivalName} se ha rendido. ¡Has ganado el duelo!`);
+                    return;
+                  }
                   executeMoveInGame(m.uci);
                 }
               });
@@ -4943,6 +5201,7 @@ Responde EXCLUSIVAMENTE en JSON:
       const isBlack = (GAME_STATE.playerColor === 'b' && (GAME_STATE.playerCount === 1 || GAME_STATE.onlineMode));
       Graphics3D.isBoardFlipped = isBlack;
       const sign = isBlack ? -1 : 1;
+      const camDist = getOptimalCameraDistance();
 
       gsap.killTweensOf(Graphics3D.camera.position);
       gsap.killTweensOf(Graphics3D.controls.target);
@@ -4956,8 +5215,8 @@ Responde EXCLUSIVAMENTE en JSON:
 
       gsap.to(Graphics3D.camera.position, {
         x: 0,
-        y: 8.5,
-        z: 8.5 * sign,
+        y: camDist,
+        z: camDist * sign,
         duration: 1.2,
         ease: "power2.inOut"
       });
@@ -4974,7 +5233,49 @@ Responde EXCLUSIVAMENTE en JSON:
       if (btnClassic) btnClassic.classList.add("active");
     }
 
+    function openMobileSidebar() {
+      const sidebar = document.getElementById("mobile-hud-sidebar");
+      if (sidebar) sidebar.classList.add("open");
+
+      const sUser = document.getElementById("sidebar-username");
+      const sAvatar = document.getElementById("sidebar-avatar");
+      if (sUser) sUser.innerText = GAME_STATE.playerName;
+      if (sAvatar) sAvatar.innerText = GAME_STATE.playerAvatar || '👑';
+
+      const sMap = document.getElementById("sidebar-map-btn");
+      if (sMap) sMap.style.display = (GAME_STATE.playerCount === 1 && GAME_STATE.gameMode === 'campaign') ? "flex" : "none";
+    }
+
+    function closeMobileSidebar() {
+      const sidebar = document.getElementById("mobile-hud-sidebar");
+      if (sidebar) sidebar.classList.remove("open");
+    }
+
+    function surrenderMatch() {
+      if (GAME_STATE.isGameOver) {
+        closeMobileSidebar();
+        return;
+      }
+      if (confirm("🏳️ ¿Estás seguro de que deseas rendirte en esta partida?")) {
+        closeMobileSidebar();
+        GAME_STATE.isGameOver = true;
+        stopChessClocks();
+        const winnerColor = GAME_STATE.playerColor === 'w' ? 'b' : 'w';
+        const winnerName = GAME_STATE.playerCount === 2 
+          ? (winnerColor === 'w' ? GAME_STATE.p1Name : GAME_STATE.p2Name)
+          : GAME_STATE.rivalName;
+
+        if (GAME_STATE.onlineMode) {
+          broadcastOnlineMove("resign");
+        }
+
+        AudioEngine.playCheck();
+        showGameOver("🏳️ ABANDONO / RENDICIÓN", `${GAME_STATE.playerName} se ha rendido. Victoria otorgada a ${winnerName}.`);
+      }
+    }
+
     function returnToLobby() {
+      closeMobileSidebar();
       stopChessClocks();
       if (GAME_STATE.onlinePollInterval) clearInterval(GAME_STATE.onlinePollInterval);
       GAME_STATE.onlineMode = false;
@@ -4985,6 +5286,7 @@ Responde EXCLUSIVAMENTE en JSON:
     }
 
     function restartMatch() {
+      closeMobileSidebar();
       startChessClocks();
       document.getElementById("gameover-banner").classList.remove("show");
       document.getElementById("btn-next-level").style.display = "none";

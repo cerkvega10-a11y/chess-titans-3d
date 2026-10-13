@@ -1064,9 +1064,9 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.65);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
+      background: rgba(0, 0, 0, 0.45);
+      backdrop-filter: blur(3px);
+      -webkit-backdrop-filter: blur(3px);
     }
     .sidebar-content {
       position: absolute;
@@ -1080,7 +1080,7 @@
       -webkit-backdrop-filter: blur(16px);
       border-left: 1px solid var(--border-highlight);
       box-shadow: -10px 0 35px rgba(0, 0, 0, 0.85);
-      padding: 20px 16px;
+      padding: 18px 14px;
       display: flex;
       flex-direction: column;
       gap: 12px;
@@ -1126,9 +1126,9 @@
       background: rgba(15, 23, 42, 0.65);
       border: 1px solid var(--border-glass);
       border-radius: 12px;
-      padding: 11px 14px;
+      padding: 10px 14px;
       color: #f8fafc;
-      font-size: 0.88rem;
+      font-size: 0.86rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -1148,6 +1148,191 @@
       border-color: #ef4444;
     }
 
+    /* Controles de cámara en la barra lateral móvil */
+    .sidebar-camera-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid var(--border-glass);
+      border-radius: 14px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .sidebar-section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 2px 4px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .sidebar-cam-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .sidebar-cam-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(10, 15, 30, 0.75);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 8px 12px;
+      color: #cbd5e1;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      width: 100%;
+    }
+    .sidebar-cam-item:hover, .sidebar-cam-item:active {
+      background: rgba(0, 243, 255, 0.15);
+      border-color: var(--accent-cyan);
+      color: #fff;
+    }
+    .sidebar-cam-item .icon {
+      font-size: 1.15rem;
+      flex-shrink: 0;
+    }
+    .sidebar-cam-item .cam-text {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .sidebar-cam-item .cam-label {
+      font-size: 0.82rem;
+      font-weight: 700;
+      color: #f8fafc;
+    }
+    .sidebar-cam-item .cam-desc {
+      font-size: 0.68rem;
+      color: #94a3b8;
+    }
+    .sidebar-cam-item .cam-active-dot {
+      font-size: 0.72rem;
+      color: transparent;
+      transition: all 0.2s;
+    }
+    .sidebar-cam-item.active {
+      background: rgba(0, 243, 255, 0.2);
+      border-color: var(--accent-cyan);
+      color: #00f3ff;
+      box-shadow: 0 0 12px rgba(0, 243, 255, 0.35);
+    }
+    .sidebar-cam-item.active .cam-label {
+      color: #00f3ff;
+    }
+    .sidebar-cam-item.active .cam-active-dot {
+      color: var(--accent-cyan);
+      text-shadow: 0 0 8px var(--accent-cyan);
+    }
+
+    /* Barra Flotante Deslizable de Cámaras para Celular */
+    .mobile-cam-dock-container {
+      display: none;
+      width: calc(100% - 20px);
+      max-width: 460px;
+      margin: 0 auto;
+      background: rgba(10, 15, 30, 0.92);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(0, 243, 255, 0.45);
+      border-radius: 20px;
+      padding: 6px 10px 8px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 16px rgba(0, 243, 255, 0.2);
+      flex-direction: column;
+      gap: 6px;
+      z-index: 45;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .mobile-cam-dock-container.collapsed {
+      padding: 6px 12px;
+      width: auto;
+      max-width: 230px;
+      border-color: rgba(255, 255, 255, 0.15);
+      background: rgba(10, 15, 30, 0.78);
+    }
+    .mobile-cam-dock-container.collapsed .mobile-cam-dock-scroll,
+    .mobile-cam-dock-container.collapsed .mobile-cam-dock-hint {
+      display: none;
+    }
+    .mobile-cam-dock-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 4px;
+    }
+    .mobile-cam-dock-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 0.76rem;
+      font-weight: 800;
+      color: var(--accent-cyan);
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.5px;
+    }
+    .mobile-cam-dock-hint {
+      font-size: 0.65rem;
+      color: #94a3b8;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+    .mobile-cam-dock-toggle {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--accent-cyan);
+      border-radius: 8px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      cursor: pointer;
+      line-height: 1.2;
+      transition: all 0.2s ease;
+    }
+    .mobile-cam-dock-toggle:active {
+      transform: scale(0.92);
+      background: rgba(0, 243, 255, 0.2);
+    }
+    .mobile-cam-dock-scroll {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding: 2px 2px 4px;
+      touch-action: pan-x;
+      cursor: grab;
+    }
+    .mobile-cam-dock-scroll::-webkit-scrollbar {
+      display: none;
+    }
+    .mobile-cam-pill {
+      flex: 0 0 auto;
+      background: rgba(15, 23, 42, 0.85);
+      border: 1px solid var(--border-glass);
+      color: #94a3b8;
+      padding: 8px 13px;
+      border-radius: 12px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      transition: all 0.25s ease;
+      user-select: none;
+    }
+    .mobile-cam-pill:active {
+      transform: scale(0.96);
+    }
+    .mobile-cam-pill.active {
+      background: linear-gradient(135deg, rgba(0, 243, 255, 0.28), rgba(255, 0, 127, 0.18));
+      border-color: var(--accent-cyan);
+      color: #00f3ff;
+      box-shadow: 0 0 14px rgba(0, 243, 255, 0.45);
+    }
+
     @media (max-width: 768px) {
       .lobby-container { padding: 18px 14px; }
       .lobby-title { font-size: 1.5rem; }
@@ -1160,9 +1345,9 @@
       .action-toolbar { display: none !important; }
       .gemini-dialog-box { max-width: 100%; order: 3; }
       .status-center { display: none; }
-      .bottom-bar { flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
-      .camera-toolbar { overflow-x: auto; justify-content: center; padding: 4px; width: 100%; }
-      .cam-btn { padding: 6px 8px; font-size: 0.72rem; }
+      .bottom-bar { flex-direction: column; align-items: center; justify-content: center; gap: 6px; width: 100%; }
+      .camera-toolbar { display: none !important; }
+      .mobile-cam-dock-container { display: flex; }
     }
   </style>
 </head>
@@ -1660,22 +1845,59 @@
 
     <!-- Barra Inferior -->
     <div class="bottom-bar">
-      <div class="camera-toolbar hud-element">
-        <button class="cam-btn" onclick="rotateCamera180()" title="Invertir vista 180 grados">
+      <!-- Toolbar de Cámara para PC / Pantallas Grandes -->
+      <div class="camera-toolbar hud-element" id="desktop-camera-toolbar">
+        <button class="cam-btn" data-cam="180" onclick="rotateCamera180()" title="Invertir vista 180 grados">
           🔄 180°
         </button>
-        <button class="cam-btn" onclick="setCameraView('top', this)" title="Vista Cenital">
+        <button class="cam-btn" data-cam="top" onclick="setCameraView('top', this)" title="Vista Cenital">
           🎥 Cenital
         </button>
-        <button class="cam-btn active" id="btn-cam-classic" onclick="setCameraView('classic', this)" title="Vista 45° Clásica">
+        <button class="cam-btn active" id="btn-cam-classic" data-cam="classic" onclick="setCameraView('classic', this)" title="Vista 45° Clásica">
           📐 45° Clásica
         </button>
-        <button class="cam-btn" onclick="setCameraView('cinematic', this)" title="Vista a Ras de Tablero">
+        <button class="cam-btn" data-cam="cinematic" onclick="setCameraView('cinematic', this)" title="Vista a Ras de Tablero">
           👁️ Cinemática
         </button>
-        <button class="cam-btn" id="btn-auto-rotate" onclick="toggleAutoRotate()" title="Giro Orbital 360°">
+        <button class="cam-btn btn-auto-rotate" id="btn-auto-rotate" data-cam="auto" onclick="toggleAutoRotate()" title="Giro Orbital 360°">
           💫 Auto 360°
         </button>
+      </div>
+
+      <!-- Barra Flotante Deslizable de Cámaras para Celular -->
+      <div class="mobile-cam-dock-container hud-element" id="mobile-cam-dock-container">
+        <div class="mobile-cam-dock-header">
+          <div class="mobile-cam-dock-title">
+            <span>🎥</span>
+            <span>CÁMARAS 3D</span>
+          </div>
+          <span class="mobile-cam-dock-hint">◄ Desliza para cambiar ángulo ►</span>
+          <button class="mobile-cam-dock-toggle" id="btn-toggle-cam-dock" onclick="toggleMobileCamDock()" title="Minimizar / Expandir Barra">
+            ▼
+          </button>
+        </div>
+        <div class="mobile-cam-dock-scroll" id="mobile-cam-dock-scroll">
+          <button class="mobile-cam-pill active" data-cam="classic" onclick="setCameraView('classic', this)">
+            <span class="cam-icon">📐</span>
+            <span class="cam-name">45° Clásica</span>
+          </button>
+          <button class="mobile-cam-pill" data-cam="top" onclick="setCameraView('top', this)">
+            <span class="cam-icon">🎥</span>
+            <span class="cam-name">90° Cenital</span>
+          </button>
+          <button class="mobile-cam-pill" data-cam="cinematic" onclick="setCameraView('cinematic', this)">
+            <span class="cam-icon">👁️</span>
+            <span class="cam-name">Cinemática</span>
+          </button>
+          <button class="mobile-cam-pill" data-cam="180" onclick="rotateCamera180()">
+            <span class="cam-icon">🔄</span>
+            <span class="cam-name">Girar 180°</span>
+          </button>
+          <button class="mobile-cam-pill btn-auto-rotate" data-cam="auto" id="btn-auto-rotate-mobile" onclick="toggleAutoRotate()">
+            <span class="cam-icon">💫</span>
+            <span class="cam-name">Auto 360°</span>
+          </button>
+        </div>
       </div>
 
       <div class="action-toolbar hud-element">
@@ -1760,14 +1982,53 @@
         </button>
       </div>
 
-      <!-- Controles de cámara táctiles -->
-      <div style="margin-top:auto; padding-top:10px; border-top:1px solid var(--border-glass);">
-        <div style="font-size:0.72rem; color:#94a3b8; margin-bottom:8px; font-weight:700; text-transform:uppercase;">Ángulos de Cámara</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:6px;">
-          <button class="cam-btn active" onclick="closeMobileSidebar(); setCameraView('classic', this);">📐 45° Completa</button>
-          <button class="cam-btn" onclick="closeMobileSidebar(); setCameraView('top', this);">🎥 Cenital</button>
-          <button class="cam-btn" onclick="closeMobileSidebar(); setCameraView('cinematic', this);">👁️ Ras de Mesa</button>
-          <button class="cam-btn" onclick="closeMobileSidebar(); rotateCamera180();">🔄 Girar 180°</button>
+      <!-- Controles de cámara táctiles en Barra Lateral -->
+      <div class="sidebar-camera-box">
+        <div class="sidebar-section-header">
+          <span style="font-size:0.75rem; color:var(--accent-cyan); font-weight:800; text-transform:uppercase; letter-spacing:0.5px;">🎥 Perspectivas 3D (En Vivo)</span>
+          <span style="font-size:0.65rem; color:#94a3b8;">Toca para cambiar</span>
+        </div>
+        <div class="sidebar-cam-list">
+          <button class="sidebar-cam-item active" data-cam="classic" onclick="setCameraView('classic', this);">
+            <span class="icon">📐</span>
+            <div class="cam-text">
+              <span class="cam-label">45° Clásica</span>
+              <span class="cam-desc">Tablero completo sin recorte</span>
+            </div>
+            <span class="cam-active-dot">●</span>
+          </button>
+          <button class="sidebar-cam-item" data-cam="top" onclick="setCameraView('top', this);">
+            <span class="icon">🎥</span>
+            <div class="cam-text">
+              <span class="cam-label">90° Cenital</span>
+              <span class="cam-desc">Vista vertical desde arriba</span>
+            </div>
+            <span class="cam-active-dot">●</span>
+          </button>
+          <button class="sidebar-cam-item" data-cam="cinematic" onclick="setCameraView('cinematic', this);">
+            <span class="icon">👁️</span>
+            <div class="cam-text">
+              <span class="cam-label">Cinemática</span>
+              <span class="cam-desc">A ras del tablero y piezas</span>
+            </div>
+            <span class="cam-active-dot">●</span>
+          </button>
+          <button class="sidebar-cam-item" data-cam="180" onclick="rotateCamera180();">
+            <span class="icon">🔄</span>
+            <div class="cam-text">
+              <span class="cam-label">Invertir 180°</span>
+              <span class="cam-desc">Perspectiva del rival</span>
+            </div>
+            <span class="cam-active-dot">●</span>
+          </button>
+          <button class="sidebar-cam-item btn-auto-rotate" data-cam="auto" onclick="toggleAutoRotate();">
+            <span class="icon">💫</span>
+            <div class="cam-text">
+              <span class="cam-label">Auto 360°</span>
+              <span class="cam-desc">Giro orbital continuo</span>
+            </div>
+            <span class="cam-active-dot">●</span>
+          </button>
         </div>
       </div>
     </div>
@@ -3885,8 +4146,8 @@ Responde EXCLUSIVAMENTE en JSON:
       setCameraAngle(type) {
         gsap.killTweensOf(this.camera.position);
         this.controls.autoRotate = false;
-        document.getElementById("btn-auto-rotate").classList.remove("active");
-        document.getElementById("btn-auto-rotate").innerText = "💫 Auto 360°";
+        this.autoRotateActive = false;
+        if (typeof updateAutoRotateButtons === 'function') updateAutoRotateButtons(false);
 
         const sign = this.isBoardFlipped ? -1 : 1;
         const camDist = getOptimalCameraDistance();
@@ -3920,13 +4181,11 @@ Responde EXCLUSIVAMENTE en JSON:
         this.autoRotateActive = !this.autoRotateActive;
         this.controls.autoRotate = this.autoRotateActive;
         this.controls.autoRotateSpeed = 1.6;
-        const btn = document.getElementById("btn-auto-rotate");
+        if (typeof updateAutoRotateButtons === 'function') updateAutoRotateButtons(this.autoRotateActive);
         if (this.autoRotateActive) {
-          btn.classList.add("active");
-          btn.innerText = "💫 Auto: ON";
-        } else {
-          btn.classList.remove("active");
-          btn.innerText = "💫 Auto 360°";
+          document.querySelectorAll('[data-cam]').forEach(b => {
+            if (b.dataset.cam !== 'auto') b.classList.remove('active');
+          });
         }
       },
 
@@ -5207,11 +5466,8 @@ Responde EXCLUSIVAMENTE en JSON:
       gsap.killTweensOf(Graphics3D.controls.target);
 
       Graphics3D.controls.autoRotate = false;
-      const btnAuto = document.getElementById("btn-auto-rotate");
-      if (btnAuto) {
-        btnAuto.classList.remove("active");
-        btnAuto.innerText = "💫 Auto 360°";
-      }
+      Graphics3D.autoRotateActive = false;
+      updateAutoRotateButtons(false);
 
       gsap.to(Graphics3D.camera.position, {
         x: 0,
@@ -5228,9 +5484,7 @@ Responde EXCLUSIVAMENTE en JSON:
         ease: "power2.inOut"
       });
 
-      document.querySelectorAll(".camera-toolbar .cam-btn").forEach(b => b.classList.remove("active"));
-      const btnClassic = document.getElementById("btn-cam-classic");
-      if (btnClassic) btnClassic.classList.add("active");
+      syncCameraActiveButtons('classic');
     }
 
     function openMobileSidebar() {
@@ -5313,14 +5567,85 @@ Responde EXCLUSIVAMENTE en JSON:
       }
     }
 
-    function rotateCamera180() { Graphics3D.rotate180(); }
+    function rotateCamera180() {
+      Graphics3D.rotate180();
+      document.querySelectorAll('[data-cam="180"]').forEach(btn => {
+        btn.classList.add("active");
+        setTimeout(() => btn.classList.remove("active"), 600);
+      });
+    }
+
     function setCameraView(type, btn) {
-      document.querySelectorAll(".camera-toolbar .cam-btn").forEach(b => b.classList.remove("active"));
-      const targetBtn = btn || (typeof event !== 'undefined' && event ? event.currentTarget : null);
-      if (targetBtn) targetBtn.classList.add("active");
+      if (Graphics3D.autoRotateActive) {
+        Graphics3D.controls.autoRotate = false;
+        Graphics3D.autoRotateActive = false;
+        updateAutoRotateButtons(false);
+      }
+      syncCameraActiveButtons(type);
       Graphics3D.setCameraAngle(type);
     }
-    function toggleAutoRotate() { Graphics3D.toggleAutoRotate(); }
+
+    function toggleAutoRotate() {
+      Graphics3D.toggleAutoRotate();
+    }
+
+    function syncCameraActiveButtons(type) {
+      document.querySelectorAll('[data-cam]').forEach(b => {
+        if (b.dataset.cam === type) {
+          b.classList.add('active');
+        } else if (b.dataset.cam !== 'auto') {
+          b.classList.remove('active');
+        }
+      });
+      const btnClassic = document.getElementById("btn-cam-classic");
+      if (btnClassic) btnClassic.classList.toggle("active", type === 'classic');
+    }
+
+    function updateAutoRotateButtons(isActive) {
+      document.querySelectorAll('.btn-auto-rotate, [data-cam="auto"]').forEach(btn => {
+        btn.classList.toggle("active", isActive);
+        const nameEl = btn.querySelector(".cam-name") || btn.querySelector(".cam-label");
+        if (nameEl) {
+          nameEl.innerText = isActive ? "Auto: ON" : "Auto 360°";
+        } else {
+          btn.innerText = isActive ? "💫 Auto: ON" : "💫 Auto 360°";
+        }
+      });
+    }
+
+    function toggleMobileCamDock() {
+      const dock = document.getElementById("mobile-cam-dock-container");
+      const btn = document.getElementById("btn-toggle-cam-dock");
+      if (!dock || !btn) return;
+      dock.classList.toggle("collapsed");
+      const isCollapsed = dock.classList.contains("collapsed");
+      btn.innerText = isCollapsed ? "▲" : "▼";
+      btn.title = isCollapsed ? "Expandir Cámaras" : "Minimizar Barra";
+    }
+
+    function initMobileCamDockDrag() {
+      const slider = document.getElementById("mobile-cam-dock-scroll");
+      if (!slider) return;
+      let isDown = false;
+      let startX = 0;
+      let scrollLeft = 0;
+
+      slider.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - slider.offsetLeft;
+        scrollLeft = slider.scrollLeft;
+        slider.style.cursor = 'grabbing';
+      });
+      slider.addEventListener('mouseleave', () => { isDown = false; slider.style.cursor = 'grab'; });
+      slider.addEventListener('mouseup', () => { isDown = false; slider.style.cursor = 'grab'; });
+      slider.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - slider.offsetLeft;
+        const walk = (x - startX) * 1.5;
+        slider.scrollLeft = scrollLeft - walk;
+      });
+    }
 
     function openSettingsModal() { document.getElementById("modal-settings").classList.add("open"); }
     function closeSettingsModal() { document.getElementById("modal-settings").classList.remove("open"); }
@@ -5427,6 +5752,7 @@ El sistema funciona al 100% sin anomalías.`);
       updateCampaignUI();
       Graphics3D.init();
       Graphics3D.controls.autoRotate = false;
+      initMobileCamDockDrag();
     });
   </script>
 </body>

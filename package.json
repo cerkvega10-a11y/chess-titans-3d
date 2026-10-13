@@ -1,0 +1,21 @@
+{
+  "name": "chess-titans-3d",
+  "version": "1.0.0",
+  "description": "Juego de Ajedrez 3D WebGL con IA Gran Maestra y Multijugador Online",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "chess",
+    "ajedrez",
+    "webgl",
+    "threejs",
+    "multiplayer"
+  ],
+  "author": "Neura Media House",
+  "license": "ISC",
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

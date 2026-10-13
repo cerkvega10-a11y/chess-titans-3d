@@ -1,0 +1,24 @@
+{
+  "name": "CHESS TITANS 3D",
+  "short_name": "Chess Titans 3D",
+  "description": "El Duelo Inmortal en Tableros Tridimensionales & Multijugador Online",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#020617",
+  "theme_color": "#00f3ff",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}

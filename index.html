@@ -2579,8 +2579,49 @@
           osc.start(now + idx * 0.12);
           osc.stop(now + idx * 0.12 + 0.45);
         });
+      },
+
+      pauseAll() {
+        if (this.ctx && this.ctx.state === 'running') {
+          this.ctx.suspend().catch(() => {});
+        }
+      },
+
+      resumeAll() {
+        if (this.ctx && this.ctx.state === 'suspended' && this.musicActive && !document.hidden) {
+          this.ctx.resume().catch(() => {});
+        }
       }
     };
+
+    // Silenciar automáticamente el audio al minimizar la app, cambiar de pestaña o bloquear el teléfono
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        AudioEngine.pauseAll();
+      } else {
+        AudioEngine.resumeAll();
+      }
+    });
+
+    window.addEventListener("pagehide", () => {
+      AudioEngine.pauseAll();
+    });
+
+    window.addEventListener("pageshow", () => {
+      AudioEngine.resumeAll();
+    });
+
+    window.addEventListener("blur", () => {
+      if (document.hidden) {
+        AudioEngine.pauseAll();
+      }
+    });
+
+    window.addEventListener("focus", () => {
+      if (!document.hidden) {
+        AudioEngine.resumeAll();
+      }
+    });
 
     /* ==========================================================================
        🤖 AGENTE 2: MOTOR DE AJEDREZ & IA TÁCTICA GRAN MAESTRA
@@ -3411,19 +3452,9 @@ Responde EXCLUSIVAMENTE en JSON:
           }
         }
 
-        const b1 = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.43, 0.1, 24), mainMat);
-        b1.position.y = 0.05;
-        b1.castShadow = true; b1.receiveShadow = true;
-        pieceGroup.add(b1);
-
-        const b2 = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.38, 0.06, 24), accentMat);
-        b2.position.y = 0.12;
-        b2.castShadow = true;
-        pieceGroup.add(b2);
-
         const weaponPivot = new THREE.Group();
         weaponPivot.name = "weaponPivot";
-        weaponPivot.position.set(0.24, 0.5, 0.1);
+        weaponPivot.position.set(0.24, 0.48, 0.08);
 
         const buildWeaponMesh = () => {
           const wGroup = new THREE.Group();
@@ -3453,71 +3484,154 @@ Responde EXCLUSIVAMENTE en JSON:
 
         switch (type) {
           case 'p': {
-            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 0.42, 20), mainMat);
-            torso.position.y = 0.34; torso.castShadow = true; pieceGroup.add(torso);
-            const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.19, 20, 20), mainMat);
-            helmet.position.y = 0.66; helmet.castShadow = true; pieceGroup.add(helmet);
-            const crest = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.16, 0.24), accentMat);
-            crest.position.set(0, 0.78, 0); pieceGroup.add(crest);
+            // PEÓN: Base circular delgada y estilizada, figura compacta (vista 90°: punto circular pequeño)
+            const pBase1 = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.26, 0.08, 20), mainMat);
+            pBase1.position.y = 0.04; pBase1.castShadow = true; pBase1.receiveShadow = true;
+            pieceGroup.add(pBase1);
+            const pBase2 = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.05, 20), accentMat);
+            pBase2.position.y = 0.105; pBase2.castShadow = true;
+            pieceGroup.add(pBase2);
+            const torso = new THREE.Mesh(new THREE.CylinderGeometry(0.12, 0.18, 0.36, 18), mainMat);
+            torso.position.y = 0.31; torso.castShadow = true; pieceGroup.add(torso);
+            const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.15, 0.12, 0.04, 16), accentMat);
+            collar.position.y = 0.50; pieceGroup.add(collar);
+            const helmet = new THREE.Mesh(new THREE.SphereGeometry(0.15, 18, 18), mainMat);
+            helmet.position.y = 0.64; helmet.castShadow = true; pieceGroup.add(helmet);
+            const crest = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), accentMat);
+            crest.position.set(0, 0.77, 0); pieceGroup.add(crest);
             break;
           }
           case 'r': {
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.33, 0.58, 24), mainMat);
-            body.position.y = 0.44; body.castShadow = true; pieceGroup.add(body);
-            const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.27, 0.12, 24), accentMat);
-            rim.position.y = 0.76; pieceGroup.add(rim);
-            for (let i = 0; i < 4; i++) {
-              const crenel = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, 0.12), accentMat);
-              const angle = (i * Math.PI) / 2;
-              crenel.position.set(Math.cos(angle) * 0.25, 0.88, Math.sin(angle) * 0.25);
+            // TORRE: Base CUADRADA de fortaleza y almenas esquineras (vista 90°: cuadrado nítido con 4 almenas)
+            const rBase1 = new THREE.Mesh(new THREE.BoxGeometry(0.68, 0.09, 0.68), mainMat);
+            rBase1.position.y = 0.045; rBase1.castShadow = true; rBase1.receiveShadow = true;
+            pieceGroup.add(rBase1);
+            const rBase2 = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.06, 0.56), accentMat);
+            rBase2.position.y = 0.11; rBase2.castShadow = true;
+            pieceGroup.add(rBase2);
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.27, 0.33, 0.54, 24), mainMat);
+            body.position.y = 0.40; body.castShadow = true; pieceGroup.add(body);
+            const platform = new THREE.Mesh(new THREE.BoxGeometry(0.56, 0.08, 0.56), accentMat);
+            platform.position.y = 0.70; platform.castShadow = true; pieceGroup.add(platform);
+            const crenelOffsets = [
+              [-0.20, -0.20],
+              [ 0.20, -0.20],
+              [-0.20,  0.20],
+              [ 0.20,  0.20]
+            ];
+            crenelOffsets.forEach(([cx, cz]) => {
+              const crenel = new THREE.Mesh(new THREE.BoxGeometry(0.14, 0.16, 0.14), accentMat);
+              crenel.position.set(cx, 0.81, cz);
+              crenel.castShadow = true;
               pieceGroup.add(crenel);
-            }
+            });
             break;
           }
           case 'n': {
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.31, 0.38, 20), mainMat);
-            body.position.y = 0.33; pieceGroup.add(body);
+            // CABALLO: Base DIRECCIONAL alargada / herradura / escudo (vista 90°: cápsula ovalada apuntando al frente)
+            const nBaseCenter = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.09, 0.36), mainMat);
+            nBaseCenter.position.y = 0.045; nBaseCenter.castShadow = true; nBaseCenter.receiveShadow = true;
+            pieceGroup.add(nBaseCenter);
+            const nBaseFront = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.09, 16), mainMat);
+            nBaseFront.position.set(0, 0.045, 0.18); nBaseFront.castShadow = true;
+            pieceGroup.add(nBaseFront);
+            const nBaseBack = new THREE.Mesh(new THREE.CylinderGeometry(0.22, 0.22, 0.09, 16), mainMat);
+            nBaseBack.position.set(0, 0.045, -0.18); nBaseBack.castShadow = true;
+            pieceGroup.add(nBaseBack);
+
+            const nAccentCenter = new THREE.Mesh(new THREE.BoxGeometry(0.36, 0.05, 0.30), accentMat);
+            nAccentCenter.position.y = 0.11; nAccentCenter.castShadow = true;
+            pieceGroup.add(nAccentCenter);
+            const nAccentFront = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.05, 16), accentMat);
+            nAccentFront.position.set(0, 0.11, 0.15);
+            pieceGroup.add(nAccentFront);
+            const nAccentBack = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.18, 0.05, 16), accentMat);
+            nAccentBack.position.set(0, 0.11, -0.15);
+            pieceGroup.add(nAccentBack);
+
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.28, 0.34, 18), mainMat);
+            body.position.y = 0.29; body.castShadow = true; pieceGroup.add(body);
             const headG = new THREE.Group();
             const neck = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.38, 16), mainMat);
-            neck.rotation.x = -0.35; neck.position.set(0, 0.56, -0.05); headG.add(neck);
-            const muzzle = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.36, 0.36), mainMat);
-            muzzle.rotation.x = 0.38; muzzle.position.set(0, 0.74, 0.1); headG.add(muzzle);
-            const earL = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.16, 8), accentMat);
+            neck.rotation.x = -0.35; neck.position.set(0, 0.54, -0.05); headG.add(neck);
+            const muzzle = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.34, 0.40), mainMat);
+            muzzle.rotation.x = 0.38; muzzle.position.set(0, 0.73, 0.12); headG.add(muzzle);
+            const earL = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 8), accentMat);
             earL.position.set(0.08, 0.95, -0.05); headG.add(earL);
-            const earR = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.16, 8), accentMat);
+            const earR = new THREE.Mesh(new THREE.ConeGeometry(0.05, 0.18, 8), accentMat);
             earR.position.set(-0.08, 0.95, -0.05); headG.add(earR);
-            const mane = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.38, 0.16), accentMat);
+            const mane = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.42, 0.18), accentMat);
             mane.position.set(0, 0.72, -0.16); headG.add(mane);
             headG.castShadow = true; pieceGroup.add(headG);
             break;
           }
           case 'b': {
-            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.19, 0.31, 0.62, 20), mainMat);
-            body.position.y = 0.44; body.castShadow = true; pieceGroup.add(body);
-            const miter = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.36, 16), accentMat);
-            miter.position.y = 0.86; miter.castShadow = true; pieceGroup.add(miter);
+            // ALFIL: Base HEXAGONAL (6 lados) con mitra y hendidura diagonal heráldica (vista 90°: hexágono con corte diagonal)
+            const bBase1 = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.42, 0.09, 6), mainMat);
+            bBase1.position.y = 0.045; bBase1.castShadow = true; bBase1.receiveShadow = true;
+            pieceGroup.add(bBase1);
+            const bBase2 = new THREE.Mesh(new THREE.CylinderGeometry(0.30, 0.36, 0.05, 6), accentMat);
+            bBase2.position.y = 0.11; bBase2.castShadow = true;
+            pieceGroup.add(bBase2);
+            const body = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.28, 0.58, 6), mainMat);
+            body.position.y = 0.42; body.castShadow = true; pieceGroup.add(body);
+            const collar = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.20, 0.06, 6), accentMat);
+            collar.position.y = 0.72; pieceGroup.add(collar);
+            const miter = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.36, 16), mainMat);
+            miter.position.y = 0.91; miter.castShadow = true; pieceGroup.add(miter);
+            const slit = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.22, 0.34), accentMat);
+            slit.rotation.y = Math.PI / 4;
+            slit.position.y = 0.93;
+            pieceGroup.add(slit);
             const finial = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 12), accentMat);
-            finial.position.y = 1.08; pieceGroup.add(finial);
+            finial.position.y = 1.11; pieceGroup.add(finial);
             break;
           }
           case 'q': {
-            const dress = new THREE.Mesh(new THREE.CylinderGeometry(0.21, 0.35, 0.72, 24), mainMat);
-            dress.position.y = 0.5; dress.castShadow = true; pieceGroup.add(dress);
-            const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(0.32, 0.18, 0.22, 16), accentMat);
-            crownBase.position.y = 0.98; crownBase.castShadow = true; pieceGroup.add(crownBase);
-            const jewel = new THREE.Mesh(new THREE.SphereGeometry(0.1, 16, 16), accentMat);
-            jewel.position.y = 1.15; pieceGroup.add(jewel);
+            // REINA: Base DODECAGONAL (12 lados) coronada por ESTRELLA SOLAR de 8 puntas (vista 90°: flor/tiara radiante de 8 puntas)
+            const qBase1 = new THREE.Mesh(new THREE.CylinderGeometry(0.40, 0.46, 0.09, 12), mainMat);
+            qBase1.position.y = 0.045; qBase1.castShadow = true; qBase1.receiveShadow = true;
+            pieceGroup.add(qBase1);
+            const qBase2 = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.40, 0.05, 12), accentMat);
+            qBase2.position.y = 0.11; qBase2.castShadow = true;
+            pieceGroup.add(qBase2);
+            const dress = new THREE.Mesh(new THREE.CylinderGeometry(0.20, 0.33, 0.68, 24), mainMat);
+            dress.position.y = 0.47; dress.castShadow = true; pieceGroup.add(dress);
+            const belt = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.20, 0.06, 16), accentMat);
+            belt.position.y = 0.82; pieceGroup.add(belt);
+            const crownBase = new THREE.Mesh(new THREE.CylinderGeometry(0.34, 0.20, 0.20, 16), accentMat);
+            crownBase.position.y = 0.94; crownBase.castShadow = true; pieceGroup.add(crownBase);
+            for (let i = 0; i < 8; i++) {
+              const angle = (i * Math.PI * 2) / 8;
+              const spike = new THREE.Mesh(new THREE.ConeGeometry(0.045, 0.16, 8), accentMat);
+              spike.position.set(Math.cos(angle) * 0.28, 1.06, Math.sin(angle) * 0.28);
+              spike.castShadow = true;
+              pieceGroup.add(spike);
+            }
+            const jewel = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), accentMat);
+            jewel.position.y = 1.05; jewel.castShadow = true; pieceGroup.add(jewel);
             break;
           }
           case 'k': {
-            const mantle = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.36, 0.78, 24), mainMat);
-            mantle.position.y = 0.54; mantle.castShadow = true; pieceGroup.add(mantle);
-            const crown = new THREE.Mesh(new THREE.CylinderGeometry(0.36, 0.24, 0.22, 16), accentMat);
-            crown.position.y = 1.06; crown.castShadow = true; pieceGroup.add(crown);
-            const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.3, 0.08), accentMat);
-            crossV.position.y = 1.28; pieceGroup.add(crossV);
-            const crossH = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.08, 0.08), accentMat);
-            crossH.position.y = 1.3; pieceGroup.add(crossH);
+            // REY: Base OCTAGONAL imperial robusta (8 lados) y GRAN CRUZ 3D `+` (vista 90°: octágono imponente con una clara cruz `+`)
+            const kBase1 = new THREE.Mesh(new THREE.CylinderGeometry(0.44, 0.50, 0.11, 8), mainMat);
+            kBase1.position.y = 0.055; kBase1.castShadow = true; kBase1.receiveShadow = true;
+            pieceGroup.add(kBase1);
+            const kBase2 = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.44, 0.06, 8), accentMat);
+            kBase2.position.y = 0.14; kBase2.castShadow = true;
+            pieceGroup.add(kBase2);
+            const mantle = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.36, 0.74, 8), mainMat);
+            mantle.position.y = 0.53; mantle.castShadow = true; pieceGroup.add(mantle);
+            const crownRim = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.24, 0.12, 8), accentMat);
+            crownRim.position.y = 0.94; crownRim.castShadow = true; pieceGroup.add(crownRim);
+            const crownDome = new THREE.Mesh(new THREE.SphereGeometry(0.22, 16, 12, 0, Math.PI * 2, 0, Math.PI * 0.5), accentMat);
+            crownDome.position.y = 1.00; crownDome.castShadow = true; pieceGroup.add(crownDome);
+            const crossV = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.36, 0.10), accentMat);
+            crossV.position.y = 1.28; crossV.castShadow = true; pieceGroup.add(crossV);
+            const crossX = new THREE.Mesh(new THREE.BoxGeometry(0.34, 0.10, 0.10), accentMat);
+            crossX.position.y = 1.30; crossX.castShadow = true; pieceGroup.add(crossX);
+            const crossZ = new THREE.Mesh(new THREE.BoxGeometry(0.10, 0.10, 0.34), accentMat);
+            crossZ.position.y = 1.30; crossZ.castShadow = true; pieceGroup.add(crossZ);
             break;
           }
         }
